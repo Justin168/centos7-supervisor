@@ -6,9 +6,8 @@ set -u
 # Supervisord default params
 SUPERVISOR_PARAMS='-c /etc/supervisord.conf'
 
-# Create directories for supervisor's UNIX socket and logs (which might be missing
-# as container might start with /data mounted from another data-container).
-mkdir -p /data/{conf,run,logs}
+# Create directories for supervisor's UNIX socket and logs
+mkdir -p /data/conf /data/run /data/logs
 chmod 711 /data/conf /data/run /data/logs
 
 if [ "$(ls /config/init/)" ]; then
@@ -34,8 +33,6 @@ if test -t 0; then
 # Detached mode? Run supervisord in foreground, which will stay until container is stopped.
 else
   # If some extra params were passed, execute them before.
-  # @TODO It is a bit confusing that the passed command runs *before* supervisord,
-  #       while in interactive mode they run *after* supervisor.
   if [[ $@ ]]; then
     eval $@
   fi
